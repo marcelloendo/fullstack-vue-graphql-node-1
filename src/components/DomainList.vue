@@ -67,7 +67,6 @@ export default {
 		},
 		deletePrefix(prefix) {
 			this.prefixes.splice(this.prefixes.indexOf(prefix), 1);
-			this.generate();
 		},
 		addSufix(sufix) {
 			this.sufixes.push(sufix);
