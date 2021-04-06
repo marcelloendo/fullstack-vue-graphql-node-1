@@ -6,11 +6,14 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "node server.js"
+    "postinstall": "npm run build",
+    "start": "node server.js",
+    "Install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run dev"
   },
   "dependencies": {
     "bootstrap": "^4.6.0",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
     "font-awesome": "^4.7.0",
     "vue": "^2.6.11"
   },
@@ -36,9 +39,18 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "quotes": ["error", "double"],
-      "indent": ["error", "tab"],
-      "semi": ["error", "always"]
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "indent": [
+        "error",
+        "tab"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ]
     }
   },
   "browserslist": [
