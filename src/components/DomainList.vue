@@ -1,100 +1,67 @@
 <template>
-  <div>
-    <div id="main">
-      <div class="container">
-        <div class="row">
-          <div class="col-md">
-            <AppItemList title="Prefixo" v-bind:itens="prefixes" v-on:addItem="addPrefix" v-on:deleteItem="deletePrefix"></AppItemList>
-           </div>
-          <div class="col-md">
-            <AppItemList title="Sufixo" v-bind:itens="sufixes" v-on:addItem="addSufix" v-on:deleteItem="deleteSufix"></AppItemList>
-          </div>
-        </div>
-        <br />
-        <h5>
-          Domains <span class="badge badge-info">{{ domains.length }}</span>
-        </h5>
-        <div class="card">
-          <div class="card-body">
-            <li
-              class="list-group-item"
-              v-for="domain in domains"
-              v-bind:key="domain"
-            >
-              <div class="row">
-                <div class="col-md">
-                  {{ domain.name }}
-                </div>
-                <div class="col-md text-right">
-                  <a
-                    class="btn btn-info"
-                    v-bind:href="domain.checkout"
-                    target="_blank"
-                  >
-                    <span class="fa fa-search"> </span>
-                  </a>
-                </div>
-              </div>
-            </li>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md">
+				<AppItemList title="Prefixos" type="prefix" v-bind:items="items.prefix" v-on:addItem="addItem" v-on:deleteItem="deleteItem"></AppItemList>
+			</div>
+			<div class="col-md">
+				<AppItemList title="Sufixos" type="suffix" v-bind:items="items.suffix" v-on:addItem="addItem" v-on:deleteItem="deleteItem"></AppItemList>
+			</div>
+		</div>
+		<br/>
+		<h5>Domínios <span class="badge badge-info">{{ domains.length }}</span></h5>
+		<div class="card">
+			<div class="card-body">
+				<ul class="list-group">
+					<li class="list-group-item" v-for="domain in domains" v-bind:key="domain.name">
+						<div class="row">
+							<div class="col-md-6">
+								{{ domain.name }}
+							</div>
+							<div class="col-md-3">
+								<span class="badge badge-info">{{ (domain.available) ? "Disponível" : "Não Disponível" }}</span>
+							</div>
+							<div class="col-md-3 text-right">
+								<a class="btn btn-info" v-bind:href="domain.checkout" target="_blank">
+									<span class="fa fa-shopping-cart"></span>
+								</a>
+								&nbsp;
+								<button class="btn btn-info" @click="openDomain(domain)">
+									<span class="fa fa-search"></span>
+								</button>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
-import "bootstrap/dist/css/bootstrap.css";
-import "font-awesome/css/font-awesome.css";
+import { mapState, mapActions } from "vuex";
 import AppItemList from "./AppItemList";
-
 export default {
-	name: "App",
+	name: "app",
 	components: {
-		AppItemList,
+		AppItemList
 	},
 	data: function () {
-		return {
-			prefix: "",
-			sufix: "",
-			prefixes: ["Air", "Jet", "Flight"],
-			sufixes: ["Hub", "Station", "Mart"],
-		};
+		return {};
 	},
 	methods: {
-		addPrefix(prefix) {
-			this.prefixes.push(prefix);
-		},
-		deletePrefix(prefix) {
-			this.prefixes.splice(this.prefixes.indexOf(prefix), 1);
-		},
-		addSufix(sufix) {
-			this.sufixes.push(sufix);
-		},
-		deleteSufix(sufix) {
-			this.sufixes.splice(this.sufixes.indexOf(sufix), 1);
-		},
+		...mapActions(["addItem", "deleteItem", "getItems", "generateDomains"]),
+		openDomain(domain) {
+			this.$router.push({
+				path: `/domains/${domain.name}`
+			});
+		}
 	},
 	computed: {
-		domains() {
-			const domains = [];
-			for (const prefix of this.prefixes) {
-				for (const sufix of this.sufixes) {
-					const name = prefix + sufix;
-					const url = name.toLowerCase();
-					const checkout = `https://www.google.com/search?q=${url}`;
-					domains.push({
-						name,
-						checkout,
-					});
-				}
-			}
-			return domains;
-		},
-	},
+		...mapState(["items", "domains"])
+	}
 };
 </script>
 
 <style>
-
 </style>
